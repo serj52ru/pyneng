@@ -25,3 +25,5 @@ print("{:20}{}\n{:20}{}\n{:20}{}\n{:20}{}\n{:20}{}\n".format(
   "Last update", ospf_route.split()[4].rstrip(","),
   "Outbound Interface", ospf_route.split()[5]))
 
+
+
