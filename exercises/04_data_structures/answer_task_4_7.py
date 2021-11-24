@@ -16,11 +16,6 @@
 """
 
 mac = "AAAA:BBBB:CCCC"
-a = bin(int(list(mac.split(":")[0])[0], 16))[2:] + bin(int(list(mac.split(":")[0])[1], 16))[2:] + bin(int(list(mac.split(":")[0])[2], 16))[2:] + bin(int(list(mac.split(":")[0])[3], 16))[2:]
-b = bin(int(list(mac.split(":")[1])[0], 16))[2:] + bin(int(list(mac.split(":")[1])[1], 16))[2:] + bin(int(list(mac.split(":")[1])[2], 16))[2:] + bin(int(list(mac.split(":")[1])[3], 16))[2:]
-c = bin(int(list(mac.split(":")[2])[0], 16))[2:] + bin(int(list(mac.split(":")[2])[1], 16))[2:] + bin(int(list(mac.split(":")[2])[2], 16))[2:] + bin(int(list(mac.split(":")[2])[3], 16))[2:]
-result = a + b + c
-print(result)
 
-
-
+bin_mac = "{:b}".format(int(mac.replace(":", ""), 16))
+print(bin_mac)
