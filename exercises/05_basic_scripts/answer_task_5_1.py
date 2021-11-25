@@ -46,8 +46,7 @@ london_co = {
         "routing": True,
     },
 }
-from sys import argv
-input1 = input('Enter device name r1, r2 or sw1: ')
-print(london_co[input1])
 
+device = input("Введите имя устройства: ")
 
+print(london_co[device])

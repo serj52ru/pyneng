@@ -44,3 +44,8 @@ london_co = {
         "routing": True,
     },
 }
+from sys import argv
+input1 = input('Enter device name (r1, r2 or sw1): ')
+input2 = input('Enter parametr (location, vendor, model, ios, ip, vlans or routing): ')
+print(london_co[input1][input2])
+
