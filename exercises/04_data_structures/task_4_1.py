@@ -20,3 +20,7 @@ print(nat.replace('Fast', 'Gigabit'))
 
 
 
+
+
+
+
