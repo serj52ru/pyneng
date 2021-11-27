@@ -54,10 +54,5 @@ par = ", ".join(list(london_co[input1]))
 input2 = input(f'Enter parametr ({par}): ')
 print(london_co[input1].get(input2, 'Такого параметра нет'))
 
-#try:
-#    print(london_co[input1][input2])
-#except KeyError:
-#    print('Такого параметра нет')
-
 
 
