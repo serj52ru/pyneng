@@ -50,3 +50,7 @@ london_co = {
         "routing": True,
     },
 }
+from sys import argv
+input1 = input('Enter device name: ')
+input2 = input(f'Enter parametr ({", ".join(list(london_co[input1]))}): ')
+print(london_co[input1][input2])
