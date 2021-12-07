@@ -19,16 +19,17 @@
 """
 
 ip = input('Введите ip адрес в формате х.х.х.х: ')
+list = ip.split()
 ip_correct = False
-list = ip.split('.')
-while not ip_correct:
-    if not (ip[0].isdigit() and ip[0].isdigit() and ip[0].isdigit() and ip[0].isdigit()):
-       print('Неправильный IP-адрес')
-    elif
-
+while ip_correct:
+    if not "." in list:
+       print('Неправильный IP-адрес1')
+    elif not (ip[0].isdigit() and ip[1].isdigit() and ip[2].isdigit() and ip[3].isdigit()):
+       print('Неправильный IP-адрес2')
+    else:
+        ip_correct = True
 
 oct1 = int(ip.split('.')[0])
-
 if 1 <= oct1 <= 223 and ip != '0.0.0.0':
     print('unicast')
 elif 224 <= oct1 <= 239:
