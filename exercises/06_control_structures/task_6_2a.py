@@ -18,25 +18,38 @@
 Ограничение: Все задания надо выполнять используя только пройденные темы.
 """
 
-ip = input('Введите ip адрес в формате х.х.х.х: ')
-list = ip.split()
-ip_correct = False
-while ip_correct:
-    if not "." in list:
-       print('Неправильный IP-адрес1')
-    elif not (ip[0].isdigit() and ip[1].isdigit() and ip[2].isdigit() and ip[3].isdigit()):
-       print('Неправильный IP-адрес2')
-    else:
-        ip_correct = True
 
-oct1 = int(ip.split('.')[0])
-if 1 <= oct1 <= 223 and ip != '0.0.0.0':
-    print('unicast')
-elif 224 <= oct1 <= 239:
-    print('multicast')
-elif ip == '255.255.255.255':
-    print('local broadcast')
-elif ip == '0.0.0.0':
-    print('unassigned')
+#if "." in list:
+    #if list[0].isdigit() and list[1].isdigit() and list[2].isdigit() and list[3].isdigit():
+
+
+
+
+
+
+ip = input('Введите ip адрес в формате х.х.х.х: ')
+list = ip.split('.')
+
+if len(list) == 4:
+    if list[0].isdigit() and list[1].isdigit() and list[2].isdigit() and list[3].isdigit():
+        if "." in ip:
+            if 0 <= int(list[0]) <= 255 and 0 <= int(list[1]) <= 255 and 0 <= int(list[2]) <= 255 and 0 <= int(list[3]) <= 255:
+                if 1 <= int(list[0]) <= 223 and ip != '0.0.0.0':
+                    print('unicast')
+                elif 224 <= int(list[0]) <= 239:
+                    print('multicast')
+                elif ip == '255.255.255.255':
+                    print('local broadcast')
+                elif ip == '0.0.0.0':
+                    print('unassigned')
+                else:
+                    print('unused')
+            else:
+                print('Неправильный IP-адрес')
+        else:
+            print('Неправильный IP-адрес')
+    else:
+        print('Неправильный IP-адрес')
 else:
-    print('unused')
+    print('Неправильный IP-адрес')
+
