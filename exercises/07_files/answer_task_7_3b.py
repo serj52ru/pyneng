@@ -17,18 +17,11 @@ Enter VLAN number: 10
 Ограничение: Все задания надо выполнять используя только пройденные темы.
 
 """
-from pprint import pprint
-list = []
-with open('CAM_table.txt') as f:
-    for line in f:
+user_vlan = input("Enter VLAN number: ")
+
+with open("CAM_table.txt", "r") as conf:
+    for line in conf:
         words = line.split()
-        if words and words[0].isdigit():
-            words.remove('DYNAMIC')
-            list.append(words)
-
-input_vlan = input('Enter VLAN number: ')
-for i in list:
-    if i[0] == input_vlan:
-        vlan, mac, port = i
-        print(f"{vlan:<8}{mac:20}{port}")
-
+        if words and words[0].isdigit() and words[0] == user_vlan:
+            vlan, mac, _, intf = words
+            print(f"{vlan:9}{mac:20}{intf}")
