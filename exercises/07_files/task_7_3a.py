@@ -40,3 +40,17 @@
 Ограничение: Все задания надо выполнять используя только пройденные темы.
 
 """
+from pprint import pprint
+list = []
+with open('CAM_table.txt') as f:
+    for line in f:
+        words = line.split()
+        if words and words[0].isdigit():
+            words.remove('DYNAMIC')
+            words[0] = int(words[0])
+            list.append(words)
+
+sort_list = sorted(list)
+for i in sort_list:
+    vlan, mac, port = i
+    print(f"{vlan:<8}{mac:20}{port}")
