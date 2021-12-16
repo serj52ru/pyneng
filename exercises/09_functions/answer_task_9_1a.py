@@ -44,32 +44,16 @@ port_security_template = [
 
 access_config = {"FastEthernet0/12": 10, "FastEthernet0/14": 11, "FastEthernet0/16": 17}
 
-from pprint import pprint
-
 def generate_access_config(intf_vlan_mapping, access_template, psecurity=None):
-    """
-    intf_vlan_mapping - словарь с соответствием интерфейс-VLAN такого вида:
-        {'FastEthernet0/12':10,
-         'FastEthernet0/14':11,
-         'FastEthernet0/16':17}
-    access_template - список команд для порта в режиме access
+    access_config = []
 
-    Возвращает список всех портов в режиме access с конфигурацией на основе шаблона
-    """
-    access_cfg = []
-    for intf in intf_vlan_mapping:
-        access_cfg.append('interface ' + intf)
-        for line in access_template:
-            if line.endswith('vlan'):
-                access_cfg.append(line + " " + str(intf_vlan_mapping[intf]))
+    for intf, vlan in intf_vlan_mapping.items():
+        access_config.append(f"interface {intf}")
+        for command in access_template:
+            if command.endswith("access vlan"):
+                access_config.append(f"{command} {vlan}")
             else:
-                access_cfg.append(line)
+                access_config.append(command)
         if psecurity:
-            for line in port_security_template:
-                access_cfg.append(line)
-
-
-    return access_cfg
-
-
-pprint(generate_access_config(access_config, access_mode_template, port_security_template))
+            access_config.extend(psecurity)
+    return access_config
