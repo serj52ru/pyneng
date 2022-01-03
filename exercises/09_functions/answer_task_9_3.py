@@ -24,40 +24,17 @@
 Ограничение: Все задания надо выполнять используя только пройденные темы.
 """
 
-from pprint import pprint
-
 def get_int_vlan_map(config_filename):
-    with open(config_filename) as file:
-        intf = []
-        for line in file:
-            if "Fast" in line:
-                line = line.split()
-                intf.append(line[1])
-            elif "access vlan" in line:
-                line = line.split()[-1]
-                intf.append(int(line))
-            elif "trunk allowed vlan" in line:
-                line = line.split()[-1].split(",")
-                result = [int(item) for item in line]
-                intf.append(result)
-
-    intf = [intf[i:i + 2] for i in range(0, len(intf), 2)]
-
-    for i in intf:
-        if len(i) != 2:
-            intf.pop(-1)
-
     access_dict = {}
     trunk_dict = {}
-    tuple_cfg = (access_dict, trunk_dict)
 
-    for interface, vlan in intf:
-        if type(vlan) == list:
-            trunk_dict[interface] = vlan
-        else:
-            access_dict[interface] = vlan
-
-    return tuple_cfg
-
-pprint(get_int_vlan_map("config_sw1.txt"))
-
+    with open(config_filename) as cfg:
+        for line in cfg:
+            line = line.rstrip()
+            if line.startswith("interface"):
+                intf = line.split()[1]
+            elif "access vlan" in line:
+                access_dict[intf] = int(line.split()[-1])
+            elif "trunk allowed" in line:
+                trunk_dict[intf] = [int(v) for v in line.split()[-1].split(",")]
+        return access_dict, trunk_dict
