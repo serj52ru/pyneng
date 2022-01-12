@@ -48,6 +48,7 @@
 
 ignore = ["duplex", "alias", "configuration"]
 
+from pprint import pprint
 
 def ignore_command(command, ignore):
     """
@@ -65,3 +66,36 @@ def ignore_command(command, ignore):
         if word in command:
             ignore_status = True
     return ignore_status
+
+def convert_config_to_dict(config_filename):
+
+    list_cfg = []
+    dict_cfg = {}
+
+    with open (config_filename) as cfg:
+        for command in cfg:
+            if ignore_command(command, ignore):
+                pass
+            elif "!" in command:
+                pass
+            else:
+                list_cfg.append(command)
+        list_cfg.remove("\n")
+        for command in list_cfg:
+            if "interface" in command:
+                port_cfg = []
+                port = command.strip()
+            elif command.startswith(" "):
+                port_cfg.append(command.strip())
+                dict_cfg[port] = port_cfg
+            elif "line" in command:
+                port_cfg = []
+                port = command.strip()
+            else:
+                dict_cfg[command.strip()] = []
+    #pprint(list_cfg)
+    #pprint(dict_cfg)
+    return dict_cfg
+
+
+pprint(convert_config_to_dict("config_sw1.txt"))
