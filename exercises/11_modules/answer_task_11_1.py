@@ -34,7 +34,6 @@ R6           Fa 0/2          143           R S I           2811       Fa 0/0
 Ограничение: Все задания надо выполнять используя только пройденные темы.
 """
 
-from pprint import pprint
 
 def parse_cdp_neighbors(command_output):
     """
@@ -44,23 +43,19 @@ def parse_cdp_neighbors(command_output):
     и с файлами и с выводом с оборудования.
     Плюс учимся работать с таким выводом.
     """
-
-    dict_cdp = {}
-
+    result = {}
     for line in command_output.split("\n"):
+        line = line.strip()
+        columns = line.split()
         if ">" in line:
-            main_cpe = line.split(">")[0]
-        elif line:
-            line = line.split()
-            if len(line[0]) <= 3 and len(line[-1]) <= 3:
-                local_int = line[1] + line[2]
-                port_id = line[-2] + line[-1]
-                device_id = line[0]
-                dict_cdp[(main_cpe, local_int)] = (device_id, port_id)
+            hostname = line.split(">")[0]
+        # 3 индекс это столбец holdtime - там всегда число
+        elif len(columns) >= 5 and columns[3].isdigit():
+            r_host, l_int, l_int_num, *other, r_int, r_int_num = columns
+            result[(hostname, l_int + l_int_num)] = (r_host, r_int + r_int_num)
+    return result
 
-    return dict_cdp
 
 if __name__ == "__main__":
-    with open("sh_cdp_n_r3.txt") as f:
+    with open("sh_cdp_n_sw1.txt") as f:
         print(parse_cdp_neighbors(f.read()))
-
