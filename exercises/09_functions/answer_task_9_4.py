@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 """
 Задание 9.4
@@ -48,7 +47,6 @@
 
 ignore = ["duplex", "alias", "configuration"]
 
-from pprint import pprint
 
 def ignore_command(command, ignore):
     """
@@ -67,36 +65,17 @@ def ignore_command(command, ignore):
             ignore_status = True
     return ignore_status
 
+
 def convert_config_to_dict(config_filename):
+    config_dict = {}
+    with open(config_filename) as f:
+        for line in f:
+            line = line.rstrip()
+            if line and not (line.startswith("!") or ignore_command(line, ignore)):
+                if line[0].isalnum():
+                    section = line
+                    config_dict[section] = []
+                else:
+                    config_dict[section].append(line.strip())
+    return config_dict
 
-    list_cfg = []
-    dict_cfg = {}
-    with open(config_filename) as cfg:
-        for command in cfg:
-            if ignore_command(command, ignore):
-                pass
-            elif "!" in command:
-                pass
-            else:
-                list_cfg.append(command)
-
-        list_cfg.remove("\n")
-
-        for command in list_cfg:
-            if "interface" in command:
-                port_cfg = []
-                port = command.strip()
-                dict_cfg[port] = port_cfg
-            elif command.startswith(" "):
-                port_cfg.append(command.strip())
-                dict_cfg[port] = port_cfg
-            elif command.startswith("line"):
-                port_cfg = []
-                port = command.strip()
-                dict_cfg[port] = port_cfg
-            else:
-                dict_cfg[command.strip()] = []
-
-    return dict_cfg
-
-print(convert_config_to_dict("config_sw1.txt"))
