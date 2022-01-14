@@ -52,15 +52,14 @@ def parse_cdp_neighbors(command_output):
             main_cpe = line.split(">")[0]
         elif line:
             line = line.split()
-            if len(line[0]) <= 3 and len(line[-1]) <= 3:
+            if len(line[0]) <= 3 and len(line[-1]) <= 4:
                 local_int = line[1] + line[2]
                 port_id = line[-2] + line[-1]
                 device_id = line[0]
                 dict_cdp[(main_cpe, local_int)] = (device_id, port_id)
-
     return dict_cdp
 
 if __name__ == "__main__":
-    with open("sh_cdp_n_r3.txt") as f:
+    with open("sh_cdp_n_r2.txt") as f:
         print(parse_cdp_neighbors(f.read()))
 
