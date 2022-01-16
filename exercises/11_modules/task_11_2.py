@@ -47,5 +47,6 @@ def create_network_map(filenames):
     return cdp_dict
 
 if __name__ == "__main__":
-    print(create_network_map(infiles))
+    topology = create_network_map(infiles)
+    pprint(topology)
 
