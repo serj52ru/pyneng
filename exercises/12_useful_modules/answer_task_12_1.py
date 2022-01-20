@@ -14,24 +14,24 @@
 
 Ограничение: Все задания надо выполнять используя только пройденные темы.
 """
-
 import subprocess
 
-list_of_ip = ["8.8.8.8", "172.16.1.254", "10.0.0.1"]
 
-def ping_ip_addresses(ip_list):
-    reacheble_ip = []
-    unreacheble_ip = []
+def ping_ip_addresses(ip_addresses):
+    reachable = []
+    unreachable = []
 
-    for ip in ip_list:
-        ping = subprocess.run(["ping", "-c", "2", ip], stdout=subprocess.PIPE)
-        if ping.returncode:
-            unreacheble_ip.append(ip)
+    for ip in ip_addresses:
+        result = subprocess.run(
+            ["ping", "-c", "3", ip], stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        )
+        if result.returncode == 0:
+            reachable.append(ip)
         else:
-            reacheble_ip.append(ip)
-    tuple_of_ip = (reacheble_ip, unreacheble_ip)
+            unreachable.append(ip)
 
-    return tuple_of_ip
+    return reachable, unreachable
+
 
 if __name__ == "__main__":
-    print(ping_ip_addresses(list_of_ip))
+    print(ping_ip_addresses(["10.1.1.1", "8.8.8.8"]))
