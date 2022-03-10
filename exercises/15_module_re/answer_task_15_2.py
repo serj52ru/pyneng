@@ -21,24 +21,11 @@
 Проверить работу функции на примере файла sh_ip_int_br.txt.
 
 """
-
 import re
-from pprint import pprint
 
-def parse_sh_ip_int_br(file):
 
-    regex = r"(\S+\d)\s+(\S+)\s+\S+\s+\S+\s+(administratively down|up|down)\s+(up|down)"
-    cfg_list = []
-    with open(file, "r") as f:
-        for line in f:
-            match = re.search(regex, line)
-            if match:
-                #print(match.group(4))
-                intf_tuple = (match.group(1), match.group(2), match.group(3), match.group(4))
-                cfg_list.append(tuple(intf_tuple))
-        #print(cfg_list)
-
-    return cfg_list
-
-if __name__ == "__main__":
-    pprint(parse_sh_ip_int_br("sh_ip_int_br.txt"))
+def parse_sh_ip_int_br(textfile):
+    regex = r"(\S+) +(\S+) +\w+ \w+ +(administratively down|up|down) +(up|down)"
+    with open(textfile) as f:
+        result = [m.groups() for m in re.finditer(regex, f.read())]
+    return result
