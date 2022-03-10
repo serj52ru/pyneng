@@ -32,25 +32,23 @@ object network LOCAL_10.1.9.5
 
 Во всех правилах для ASA интерфейсы будут одинаковыми (inside,outside).
 """
-
 import re
-from pprint import pprint
 
-def convert_ios_nat_to_asa(src_file, dst_file):
 
-    regex = r"(?P<ip>\d+.\d+.\d+.\d+) (?P<src_port>\d+) \S+\s\S+ (?P<to_port>\d+)"
-    cfg = []
+def convert_ios_nat_to_asa(cisco_ios, cisco_asa):
+    regex = (
+        "tcp (?P<local_ip>\S+) +(?P<lport>\d+) +interface +\S+ (?P<outside_port>\d+)"
+    )
+    asa_template = (
+        "object network LOCAL_{local_ip}\n"
+        " host {local_ip}\n"
+        " nat (inside,outside) static interface service tcp {lport} {outside_port}\n"
+    )
+    with open(cisco_ios) as f, open(cisco_asa, "w") as asa_nat_cfg:
+        data = re.finditer(regex, f.read())
+        for match in data:
+            asa_nat_cfg.write(asa_template.format(**match.groupdict()))
 
-    with open(src_file, "r") as src, open(dst_file, "w") as dst:
-        for line in src:
-            match = re.search(regex, line)
-            ip = match.groupdict()["ip"]
-            src_port = match.groupdict()["src_port"]
-            to_port = match.groupdict()["to_port"]
-            cfg.append(f"object network LOCAL_{ip}\n")
-            cfg.append(f" host {ip}\n")
-            cfg.append(f" nat (inside,outside) static interface service tcp {src_port} {to_port}\n")
-        dst.writelines(cfg)
 
 if __name__ == "__main__":
-    convert_ios_nat_to_asa("cisco_nat_config.txt", "dst_cfg.txt")
+    convert_ios_nat_to_asa("cisco_nat_config.txt", "cisco_asa_config.txt")
