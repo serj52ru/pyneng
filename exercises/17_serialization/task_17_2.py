@@ -44,8 +44,77 @@
 """
 
 import glob
+import re
+from pprint import pprint
+import csv
 
 sh_version_files = glob.glob("sh_vers*")
-# print(sh_version_files)
+sh_version_files = sorted(sh_version_files)
+print(sh_version_files)
 
 headers = ["hostname", "ios", "image", "uptime"]
+
+
+
+
+def parse_sh_version(file_str):
+
+    file = file_str.split("\n")
+    regex_ios = r"Cisco IOS .+ Version (?P<ios>\d\d.\d[(]\d+[)]\S+),"
+    regex_image = r'System image file is (?P<image>\S+:\S+)'
+    regex_uptime = r"router uptime is (?P<uptime>\d+ days, \d+ hours, \d+ minutes)"
+    list_info = []
+    for line in file:
+        #print(line)
+        ios = re.search(regex_ios, line)
+        image = re.search(regex_image, line)
+        uptime = re.search(regex_uptime, line)
+
+        if ios:
+            ios = ios.group("ios")
+            list_info.append(ios)
+            #print(ios)
+        elif image:
+            image = image.group("image")
+            list_info.append(image.replace('"', ''))
+        elif uptime:
+            uptime = uptime.group("uptime")
+            list_info.append(uptime.replace('"', ''))
+            #print(uptime)
+
+    sh_ver_tuple = tuple(list_info)
+    #print(sh_ver_tuple)
+    return sh_ver_tuple
+
+
+def write_inventory_to_csv(data_filenames, csv_filename):
+    data = []
+    data.append(headers)
+
+    for file in data_filenames:
+        list_file = []
+        regex_hostname = r"\S+_(\S+).txt"
+        match = re.search(regex_hostname, file)
+        hostname = match.group(1)
+        print(hostname)
+
+        with open(file, "r") as f:
+            file_str = f.read()
+            tuple_info = parse_sh_version(file_str)
+            list_file.append(hostname)
+            list_file.append(tuple_info[0])
+            list_file.append(tuple_info[2])
+            list_file.append(tuple_info[1])
+
+        with open(csv_filename, "w") as f:
+            #data.append(headers)
+            data.append(list_file)
+            print(data)
+            writer = csv.writer(f)
+            for row in data:
+                writer.writerow(row)
+
+
+
+if __name__ == "__main__":
+    write_inventory_to_csv(sh_version_files, "routers_inventory.csv")
