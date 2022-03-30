@@ -33,7 +33,7 @@ def parse_sh_cdp_neighbors(show_str):
     regex_hostname = r"(\S+)>"
     regex_cdp = r"(?P<dev_id>\S+)\s+(?P<local_intf>\S+ \S+)\s+\S+\s+R S I\s+\S+\s+(?P<port_id>\S+ \S+)"
     cdp_dict = {}
-    local ={}
+    local = {}
     for line in show_str.split("\n"):
         print(line)
         if line:
