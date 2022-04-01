@@ -43,32 +43,23 @@
 > pip install graphviz
 
 """
-
 import yaml
-from pprint import pprint
-from task_11_2a import unique_network_map
 from draw_network_graph import draw_topology
 
-def transform_topology(yaml_file):
-    dict_topology = {}
-    with open(yaml_file) as f:
-        dict_all = yaml.safe_load(f)
-        #pprint(dict_all, width=40)
-        for l_dev, l_key in dict_all.items():
-            #print(l_dev)
-            #print(l_key)
-            for l_intf, r_key in l_key.items():
-                #print(l_intf)
-                #print(r_key)
-                for r_dev, r_intf in r_key.items():
-                    #print(r_dev)
-                    #print(r_intf)
-                    dict_topology[(l_dev, l_intf)] = (r_dev, r_intf)
-    #pprint(dict_topology)
-    unique_network_map(dict_topology)
-    lldp_map = unique_network_map(dict_topology)
-    return lldp_map
+
+def transform_topology(topology_filename):
+    with open(topology_filename) as f:
+        raw_topology = yaml.safe_load(f)
+
+    formatted_topology = {}
+    for l_device, peer in raw_topology.items():
+        for l_int, remote in peer.items():
+            r_device, r_int = list(remote.items())[0]
+            if not (r_device, r_int) in formatted_topology:
+                formatted_topology[(l_device, l_int)] = (r_device, r_int)
+    return formatted_topology
+
 
 if __name__ == "__main__":
-    pprint(transform_topology("topology.yaml"))
-    draw_topology(transform_topology("topology.yaml"))
+    formatted_topology = transform_topology("topology.yaml")
+    draw_topology(formatted_topology)
