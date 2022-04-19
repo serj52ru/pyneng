@@ -60,20 +60,35 @@ def convert_datetime_to_str(datetime_obj):
     return datetime.datetime.strftime(datetime_obj, "%d/%m/%Y %H:%M")
 
 
-def write_last_log_to_csv(source_log, output):
-    final_dict = {}
-    email_list = []
+def get_data_to_list(source_log):
     with open(source_log, "r") as f:
         reader = csv.DictReader(f)
-        #print(reader)
-        for row in reader:
-            row = list(row.values())
-            email_list.append(row[1])
-        pprint(sorted(email_list))
+        data = [row for row in reader]
+    return data
 
 
+def write_last_log_to_csv(source_log, output):
+    list_with_start_data = get_data_to_list(source_log)
+    #pprint(list_with_start_data, width=120)
 
+    dict_by_email = {}
 
+    for el in list_with_start_data:
+        email = el['Email']
+
+        if email not in dict_by_email:
+            dict_by_email[email] = el
+        else:
+            previous_time = convert_str_to_datetime(dict_by_email[email]['Last Changed'])
+            print(f'previous_time - {previous_time}')
+            new_time = convert_str_to_datetime(el['Last Changed'])
+            print(f'new_time - {new_time}')
+
+            if new_time > previous_time:
+                dict_by_email[email] = el
+
+    list_with_final_data = [value for key, value in dict_by_email.items()]
+    pprint(list_with_final_data)
 
 
 if __name__ == "__main__":

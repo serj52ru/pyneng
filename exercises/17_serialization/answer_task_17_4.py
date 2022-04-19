@@ -40,10 +40,8 @@ C-3PO,c3po@gmail.com,16/12/2019 17:24
 Функции convert_str_to_datetime и convert_datetime_to_str использовать не обязательно.
 
 """
-
-import datetime
 import csv
-from pprint import pprint
+import datetime
 
 
 def convert_str_to_datetime(datetime_str):
@@ -61,35 +59,21 @@ def convert_datetime_to_str(datetime_obj):
 
 
 def write_last_log_to_csv(source_log, output):
-    with open(source_log, "r") as f:
-        reader = csv.DictReader(f)
-        data = [row for row in reader]
-        #pprint(data, width=120)
-        final_dict = {}
-        for line in data:
-            email = line["Email"]
-            #pprint(final_dict, width=200)
-            #print(email)
-            if email not in final_dict:
-                final_dict[email] = line
-            else:
-                previous_time = convert_str_to_datetime(final_dict[email]["Last Changed"])
-                new_time = convert_str_to_datetime(line["Last Changed"])
-                #print(previous_time, new_time)
-                if new_time > previous_time:
-                    final_dict[email] = line
-        #pprint(data)
-    #pprint(final_dict, width=200)
-    final_list = [data for data in final_dict.values()]
-    pprint(final_list, width=200)
-    with open(output, "w") as f:
-        print(final_list[0].keys())
-        writer = csv.DictWriter(f, fieldnames=list(final_list[0].keys()))
-        writer.writeheader()
-        for data in final_list:
-            writer.writerow(data)
-
+    with open(source_log) as f:
+        data = list(csv.reader(f))
+        header = data[0]
+    result = {}
+    sorted_by_date = sorted(
+        data[1:], key=lambda x: convert_str_to_datetime(x[2])
+    )
+    for name, email, date in sorted_by_date:
+        result[email] = (name, email, date)
+    with open(output, "w") as dest:
+        writer = csv.writer(dest)
+        writer.writerow(header)
+        for row in result.values():
+            writer.writerow(row)
 
 
 if __name__ == "__main__":
-    write_last_log_to_csv("mail_log.csv", "return_4.csv")
+    write_last_log_to_csv("mail_log.csv", "example_result.csv")
