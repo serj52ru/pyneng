@@ -1,12 +1,12 @@
 - device_type: cisco_ios
   host: 192.168.122.254
   username: cisco
-  password: cisco2
+  password: cisco
   secret: cisco
   timeout: 10
   #fast_cli: true
 - device_type: cisco_ios
-  host: 192.168.122.200
+  host: 192.168.122.253
   username: cisco
   password: cisco
   secret: cisco
